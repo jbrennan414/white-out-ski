@@ -41,7 +41,7 @@ jobs:
 
       - name: Sync S3 bucket
         run: |
-          aws s3 sync ./dist ${{ secrets.WHITEOUT_BUCKET }} --delete  # Ensure correct path to built files
+          aws s3 sync ./index.html ${{ secrets.WHITEOUT_BUCKET }} --delete  # Ensure correct path to built files
 
       - name: Invalidate CloudFront cache
         run: |
