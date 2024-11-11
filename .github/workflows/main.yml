@@ -26,11 +26,11 @@ jobs:
       - name: Change directories to frontend
         run: cd white-out-frontend
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
+      - name: Change directories to frontend
+        working-directory: white-out-frontend
+        run: |
+          npm install
+          npm run build
 
       - name: Configure AWS credentials using Assume Role
         uses: aws-actions/configure-aws-credentials@v2
@@ -38,6 +38,10 @@ jobs:
           role-to-assume: arn:aws:iam::195210670873:role/white-out-ski-trust-policy
           aws-region: us-west-2
           role-session-name: white-out-ski-trust-policy
+
+      - name: Sync S3 bucket
+        run: |
+          aws s3 sync ./white-out-frontend/dist ${{ secrets.WHITEOUT_BUCKET }} --delete
 
       - name: Sync S3 bucket
         run: |
