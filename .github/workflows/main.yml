@@ -24,9 +24,6 @@ jobs:
           node-version: '18'  # Specify the Node.js version you need
       
       - name: Change directories to frontend
-        run: cd white-out-frontend
-
-      - name: Change directories to frontend
         working-directory: white-out-frontend
         run: |
           npm install
