@@ -40,10 +40,6 @@ jobs:
         run: |
           aws s3 sync ./white-out-frontend/dist ${{ secrets.WHITEOUT_BUCKET }} --delete
 
-      - name: Sync S3 bucket
-        run: |
-          aws s3 sync ./dist ${{ secrets.WHITEOUT_BUCKET }} --delete  # Ensure correct path to built files
-
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
