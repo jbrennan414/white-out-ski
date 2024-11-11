@@ -1,0 +1,52 @@
+/* Add this CSS to your stylesheets */
+.cell {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 30%;
+  }
+  
+  .empty-cell {
+    background-color: #f1f1f1;
+    opacity: 0.0;
+  }
+  
+  .calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
+  }
+  
+  .gray {
+    background-color: lightgray;
+  }
+  
+  .red {
+    background-color: red;
+  }
+  
+  .yellow {
+    background-color: yellowgreen;
+  }
+  
+  .green {
+    background-color: green;
+  }
+  
+  .month-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
