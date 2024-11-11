@@ -32,9 +32,9 @@ jobs:
       - name: Configure AWS credentials using Assume Role
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::195210670873:role/johnbrennan.codes-trust-role2
+          role-to-assume: arn:aws:iam::195210670873:role/white-out-ski-trust-policy
           aws-region: us-west-2
-          role-session-name: johnbrennan.codes-trust-role2
+          role-session-name: white-out-ski-trust-policy
 
       - name: Sync S3 bucket
         run: |
