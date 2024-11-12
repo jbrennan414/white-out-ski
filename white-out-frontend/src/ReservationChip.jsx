@@ -1,64 +1,70 @@
-import React, { useState } from 'react'
-import { Chip, Avatar } from "@mui/material";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import {
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
+import MuiAccordion from '@mui/material/Accordion';
+import MuiAccordionSummary from '@mui/material/AccordionSummary';
+import MuiAccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
 
-export default function ReservationChip(props) {
-  const [anchorEl, setAnchorEl] = useState(null);
+const Accordion = styled((props) => (
+  <MuiAccordion disableGutters elevation={0} square {...props} />
+))(({ theme }) => ({
+  border: `1px solid ${theme.palette.divider}`,
+  '&:not(:last-child)': {
+    borderBottom: 0,
+  },
+  '&::before': {
+    display: 'none',
+  },
+}));
 
-  const chipStyle = {
-    backgroundColor: props.userIsIn ? 'green' : (props.userIsIn === false ? 'red' : 'lightgrey'),
-    margin: '5px',
+const AccordionSummary = styled((props) => (
+  <MuiAccordionSummary
+    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
+    {...props}
+  />
+))(({ theme }) => ({
+  backgroundColor: 'rgba(0, 0, 0, .03)',
+  flexDirection: 'row-reverse',
+  '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
+    transform: 'rotate(90deg)',
+  },
+  '& .MuiAccordionSummary-content': {
+    marginLeft: theme.spacing(1),
+  },
+  ...theme.applyStyles('dark', {
+    backgroundColor: 'rgba(255, 255, 255, .05)',
+  }),
+}));
+
+const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+  padding: theme.spacing(2),
+  borderTop: '1px solid rgba(0, 0, 0, .125)',
+}));
+
+export default function CustomizedAccordions(props) {
+
+  const { bed_id, bed_description, bed_name } = props.bed;
+
+  console.log("props...", props);
+  const [expanded, setExpanded] = React.useState('panel1');
+
+  const handleChange = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleMenuItemClick = (value) => {
-    props.isIn(value);
-    handleClose();
-  };
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
   return (
-    <div key={props.key1}>
-      { props.loggedInUser === props.lessor.user_email ? (
-        <Chip
-          key={props.key1}
-          avatar={<Avatar src={props.lessor.user_picture} />}
-          label={props.lessor.user_name}
-          deleteIcon={<ArrowDropDownIcon />}
-          disabled={props.isPastDate}
-          onDelete={handleClick}
-          style={chipStyle}
-        /> ) : (
-        <Chip
-          key={props.key1}
-          avatar={<Avatar src={props.lessor.user_picture} />}
-          label={props.lessor.user_name}
-          disabled={props.isPastDate}
-          style={chipStyle}
-        /> )}
-
-      <Menu
-        id="status-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={() => handleMenuItemClick("in")}>In</MenuItem>
-        <MenuItem onClick={() => handleMenuItemClick("out")}>Out</MenuItem>
-      </Menu>
+    <div key={bed_id}>
+      <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
+        <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
+          <Typography>{bed_name}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {bed_description}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
     </div>
-
-  )
+  );
 }
-
-

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect, forwardRef } from "react";
 import { useParams } from "react-router-dom";
+import ReservationChip from "./ReservationChip";
 import "./Day.css";
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import {
@@ -12,7 +13,7 @@ import {
 import { getDayOfWeek, getMonth, getDate, getYear } from "./utils";
 
 import axios from "axios";
-import { lessees, isPastDate } from "./utils";
+import { beds } from "./utils";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -23,7 +24,6 @@ export default function Day(props) {
 
   const [pageIsLoading, setPageIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(day);
-  const [reservations, setReservations] = useState(lessees);
   const [shouldDisplayError, setShouldDisplayError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -63,25 +63,6 @@ export default function Day(props) {
 
   let spotsRemaining = 9;
 
-  const lessees_emails = lessees.map((item) => item.user_email);
-
-  lessees.forEach((item) => {
-    const index = reservations.findIndex((reservation) => reservation.user_email === item.user_email);
-
-    if (reservations[index]?.is_in === true) {
-      spotsRemaining--;
-    }
-
-    if (index === -1) {
-      spotsRemaining--;
-    }
-    
-  })
-
-  const guests = reservations.filter((item) => !lessees_emails.includes(item.user_email) && item.is_in).length;
-
-  spotsRemaining = spotsRemaining - guests;
-
   return (
     <div>
       {pageIsLoading ? (
@@ -105,10 +86,11 @@ export default function Day(props) {
             )} ${getDate(selectedDate)}, ${getYear(selectedDate)}`}</p>
           </div>
 
-          <div className="reservation-container">
-            {/* {renderRezzies()} */}
-            {/* {renderGuests()} */}
-          </div>
+          {beds.map((bed) => {
+            return (
+              <ReservationChip bed={bed} />
+            );
+          })}
 
           {true ? (
             <Button
