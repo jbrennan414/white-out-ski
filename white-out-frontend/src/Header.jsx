@@ -65,7 +65,6 @@ export default function Header(props) {
               </Menu>
             </div>
           ) : ( */}
-            <Chip icon={<AccountCircle />} label="Sign In" variant="outlined" onClick={() => loginWithRedirect()} />
           {/* )} */}
         </Toolbar>
       </AppBar>

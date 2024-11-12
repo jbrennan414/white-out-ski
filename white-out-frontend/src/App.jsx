@@ -6,7 +6,6 @@ import Calendar from './Calendar.jsx'
 
 import Header from './Header.jsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import Calendar from './Calendar.js'
 // import Reservations from './Reservations.js'
 import Day from './Day.jsx'
 import { React } from 'react';

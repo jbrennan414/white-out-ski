@@ -12,7 +12,6 @@ import {
 import { getDayOfWeek, getMonth, getDate, getYear } from "./utils";
 
 import axios from "axios";
-import ReservationChip from "./ReservationChip";
 import { lessees, isPastDate } from "./utils";
 
 const Alert = forwardRef(function Alert(props, ref) {
@@ -28,163 +27,27 @@ export default function Day(props) {
   const [shouldDisplayError, setShouldDisplayError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
-//   const { user, isAuthenticated } = useAuth0();
-
-  function renderRezzies() {
-
-    return lessees.map((lessor, i) => { 
-
-      const isIn = reservations.filter((item) => item.user_email === lessor.user_email)[0]?.is_in;
-
-      let email = null;
-      if (user) {
-        email = user?.email;
-      }
-
-      return <ReservationChip 
-        key={lessor.user_email} 
-        loggedInUser={email}
-        isPastDate={isPastDate(day)}
-        userIsIn={isIn} 
-        lessor={lessor} 
-        isIn={userIsIn1} />
-    })
-  }
-
-  function renderGuests() {
-
-    const lessees_emails = lessees.map((item) => item.user_email);
-
-    const otherReservations = reservations.filter((item) => !lessees_emails.includes(item.user_email));
-
-    return otherReservations.map((item, i) => { 
-      return <ReservationChip 
-        key={item.reservation_id}
-        isPastDate={isPastDate(day)}
-        loggedInUser={user?.email}
-        userIsIn={item.is_in} 
-        lessor={item} 
-        isIn={userIsIn1}
-      />
-   })
-
-  }
-
   const handleClose = () => {
     setShouldDisplayError(false);
   };
 
-  const userIsIn1 = (status) => {
-
-    setPageIsLoading(true);
-
-    const boolStatus = status === "in";
-    const date = window.location.pathname.split("/")[2];
-
-    axios.post(`https://hil0sv4jl3.execute-api.us-west-2.amazonaws.com/prod/`, {
-        reservation_date: date,
-        email: user.email,
-        name: user.name,
-        picture: user.picture,
-        is_in: boolStatus
-      })
-      .then((response) => {
-
-        setPageIsLoading(false);
-
-        let newReservations = reservations;
-
-        const userReservation = newReservations.filter((item) => item.user_email === user.email)[0];
-
-        if (!userReservation) {
-          newReservations.push({
-            user_name: user.name,
-            user_picture: user.picture,
-            user_email: user.email,
-            is_in: boolStatus
-          });
-          setReservations(newReservations);
-          setPageIsLoading(false);
-          return;
-        }
-
-        userReservation.is_in = boolStatus;
-
-        setReservations(newReservations);
-        setPageIsLoading(false);
-      })
-      .catch((error) => {
-        console.log("ERRRRRRROR", error);
-        setPageIsLoading(false);
-      });
-
-  }
-
   function bookStay() {
+    const pathSegments = window.location.pathname.split('/');
 
-    const currentReservations = reservations.filter((item) => item.user_email);
-
-    const currentReservationsEmails = currentReservations.map((item) => item.user_email);
-
-    if (currentReservationsEmails.includes(user.email)) {
-      setShouldDisplayError(true);
-      setPageIsLoading(false)
-      setErrorMessage("Oops! You already have a reservation!");
-      return;
-    }
-
-    setPageIsLoading(true);
-
-    const lessorsEmails = lessees.map((item) => item.user_email);
-
-    console.log("lessorsEmails", lessorsEmails);
-
-    if (lessorsEmails.includes(user.email)) {
-      setShouldDisplayError(true);
-      setPageIsLoading(false)
-      setErrorMessage("Select yourself to book a stay");
-      return;
-    }
-
-    const date = window.location.pathname.split("/")[2];
-
-    axios
-      .post(`https://hil0sv4jl3.execute-api.us-west-2.amazonaws.com/prod/`, {
-        reservation_date: date,
-        email: user.email,
-        name: user.name,
-        picture: user.picture,
+    axios.post(`https://c096t62awd.execute-api.us-west-2.amazonaws.com/prod/`, {
+        reservation_date: pathSegments[2],
+        bed_id: "double_2",
+        user_name: "WhiteOut Test"
       })
       .then((response) => {
-
-        let newReservations = reservations;
-
-        newReservations.push({
-          user_name: user.name,
-          user_picture: user.picture,
-          user_email: user.email,
-          is_in: true
-        });
-
-        setReservations(newReservations);
-
-        setPageIsLoading(false);
+        console.log("that worked", response);
       })
-      .catch((error) => {
-        setPageIsLoading(false);
-        setShouldDisplayError(true);
-        setErrorMessage(error.response.data.message);
-        console.log("ERRRRRRROR", error);
-      });
+
   }
 
   useEffect(() => {
-    // I think I can improve this in react router
-    // but this will work for now
     axios
-      .get(
-        `https://hil0sv4jl3.execute-api.us-west-2.amazonaws.com/prod/?date=${selectedDate}`
-      )
+      .get(`https://hil0sv4jl3.execute-api.us-west-2.amazonaws.com/prod/?date=${selectedDate}`)
       .then((response) => {
 
         setReservations(response.data.reservations);
@@ -215,7 +78,6 @@ export default function Day(props) {
     
   })
 
-  // count current guests
   const guests = reservations.filter((item) => !lessees_emails.includes(item.user_email) && item.is_in).length;
 
   spotsRemaining = spotsRemaining - guests;
@@ -248,7 +110,7 @@ export default function Day(props) {
             {/* {renderGuests()} */}
           </div>
 
-          {false ? (
+          {true ? (
             <Button
               variant="contained"
               disabled={spotsRemaining === 0}
@@ -259,7 +121,7 @@ export default function Day(props) {
               {`${spotsRemaining > 0 ? `Room for ${spotsRemaining} ${spotsRemaining === 1 ? `guest` :`guests` }` : `No spots left`}`}
             </Button>
           ) : (
-            <Button variant="contained" disabled={true}>
+            <Button variant="contained">
               {`Sign in to book`}
             </Button>
           )}
