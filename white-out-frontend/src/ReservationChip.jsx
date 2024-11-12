@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
+import TextField from '@mui/material/TextField';
+
 import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -18,16 +20,19 @@ const Accordion = styled((props) => (
   },
 }));
 
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
 const AccordionSummary = styled((props) => (
+  
   <MuiAccordionSummary
-    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
+    expandIcon={<Checkbox {...label} />}
     {...props}
   />
 ))(({ theme }) => ({
   backgroundColor: 'rgba(0, 0, 0, .03)',
   flexDirection: 'row-reverse',
   '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-    transform: 'rotate(90deg)',
+    transform: 'rotate(0deg)',
   },
   '& .MuiAccordionSummary-content': {
     marginLeft: theme.spacing(1),
@@ -44,9 +49,8 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 export default function CustomizedAccordions(props) {
 
-  const { bed_id, bed_description, bed_name } = props.bed;
+  const { bed_id, bed_name } = props.bed;
 
-  console.log("props...", props);
   const [expanded, setExpanded] = React.useState('panel1');
 
   const handleChange = (panel) => (event, newExpanded) => {
@@ -55,13 +59,14 @@ export default function CustomizedAccordions(props) {
 
   return (
     <div key={bed_id}>
-      <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
+      <Accordion expanded={expanded === bed_id} onChange={handleChange(bed_id)}>
         <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
           <Typography>{bed_name}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            {bed_description}
+          <TextField id="outlined-basic" label="Guest #1" variant="outlined" />
+          <TextField id="outlined-basic" label="Guest #2" variant="outlined" />
           </Typography>
         </AccordionDetails>
       </Accordion>
