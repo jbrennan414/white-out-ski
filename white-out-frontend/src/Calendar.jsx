@@ -16,19 +16,19 @@ export default function Calendar(props) {
 
   const [selectedMonth, setMonth] = useState(month);   
   const [selectedYear, setYear] = useState(year);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [availableBeds, setAvailableBeds] = useState({});
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    axios.get(`https://hil0sv4jl3.execute-api.us-west-2.amazonaws.com/prod?month=${selectedMonth}&year=${selectedYear}`)
-      .then((response) => {
-        setAvailableBeds(response.data);
-        setIsLoading(false);
-    }).catch((error) => {
-      console.log("ERRRRRRROR" , error);
-    });
-  }, [selectedMonth, selectedYear]);
+  //   axios.get(`https://hil0sv4jl3.execute-api.us-west-2.amazonaws.com/prod?month=${selectedMonth}&year=${selectedYear}`)
+  //     .then((response) => {
+  //       setAvailableBeds(response.data);
+  //       setIsLoading(false);
+  //   }).catch((error) => {
+  //     console.log("ERRRRRRROR" , error);
+  //   });
+  // }, [selectedMonth, selectedYear]);
 
 
   const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);

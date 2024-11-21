@@ -22,10 +22,11 @@ const Alert = forwardRef(function Alert(props, ref) {
 export default function Day(props) {
   let { day } = useParams();
 
-  const [pageIsLoading, setPageIsLoading] = useState(true);
+  const [pageIsLoading, setPageIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(day);
   const [shouldDisplayError, setShouldDisplayError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [guests, setGuests] = useState({});
 
   const handleClose = () => {
     setShouldDisplayError(false);
@@ -34,26 +35,31 @@ export default function Day(props) {
   function bookStay() {
     const pathSegments = window.location.pathname.split('/');
 
+    console.log("AAAAAAA", guests)
+
     axios.post(`https://c096t62awd.execute-api.us-west-2.amazonaws.com/prod/`, {
         reservation_date: pathSegments[2],
-        bed_id: "double_2",
-        user_name: "WhiteOut Test"
-      })
-      .then((response) => {
-        console.log("that worked", response);
-      })
+        guests: JSON.stringify(guests)
+    })
+    .then((response) => {
+      console.log("that worked", response);
+    })
+    .catch((error) => {
+      console.log("ERRRRRRROR", error);
+      setShouldDisplayError(true);
+      setErrorMessage("There was an error booking your stay. Please try again later.");
+    })
 
   }
 
   useEffect(() => {
     axios
-      .get(`https://hil0sv4jl3.execute-api.us-west-2.amazonaws.com/prod/?date=${selectedDate}`)
+      .get(`https://c096t62awd.execute-api.us-west-2.amazonaws.com/prod/?date=${selectedDate}`)
       .then((response) => {
 
-        setReservations(response.data.reservations);
+        const guests = JSON.parse(response.data[0].guests)
+        setGuests(guests);
 
-        setPageIsLoading(false);
-        setSelectedDate(selectedDate);
       })
       .catch((error) => {
         console.log("ERRRRRRROR", error);
@@ -61,7 +67,7 @@ export default function Day(props) {
       });
   }, []);
 
-  let spotsRemaining = 9;
+  const pathSegments = window.location.pathname.split('/');
 
   return (
     <div>
@@ -86,9 +92,9 @@ export default function Day(props) {
             )} ${getDate(selectedDate)}, ${getYear(selectedDate)}`}</p>
           </div>
 
-          {beds.map((bed) => {
+          {beds.map((bed, i) => {
             return (
-              <ReservationChip bed={bed} />
+              <ReservationChip key={i} bed={bed} selectedDate={pathSegments[2]} guests={guests} setGuests={setGuests} />
             );
           })}
 
