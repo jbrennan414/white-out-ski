@@ -33,19 +33,19 @@ export default function Day(props) {
   };
 
   function bookStay() {
-    const pathSegments = window.location.pathname.split('/');
+    setPageIsLoading(true);
 
-    console.log("AAAAAAA", guests)
+    const pathSegments = window.location.pathname.split('/');
 
     axios.post(`https://c096t62awd.execute-api.us-west-2.amazonaws.com/prod/`, {
         reservation_date: pathSegments[2],
         guests: JSON.stringify(guests)
     })
     .then((response) => {
-      console.log("that worked", response);
+      setPageIsLoading(false);
     })
     .catch((error) => {
-      console.log("ERRRRRRROR", error);
+      setPageIsLoading(false);
       setShouldDisplayError(true);
       setErrorMessage("There was an error booking your stay. Please try again later.");
     })
@@ -56,6 +56,12 @@ export default function Day(props) {
     axios
       .get(`https://c096t62awd.execute-api.us-west-2.amazonaws.com/prod/?date=${selectedDate}`)
       .then((response) => {
+
+        if (response.data.length === 0) {
+          setPageIsLoading(false);
+          setGuests({});
+          return;
+        }
 
         const guests = JSON.parse(response.data[0].guests)
         setGuests(guests);

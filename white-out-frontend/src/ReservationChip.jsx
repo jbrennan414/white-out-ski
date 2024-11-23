@@ -82,10 +82,8 @@ export default function ReservationChip(props) {
           <Typography>{bed_name}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
           <TextField id="outlined-basic" label="Guest #1" variant="outlined" value={guests && guests[bed_id] && guests[bed_id]["spot_1"] ? guests[bed_id]["spot_1"] : ""} onChange={prepGuests(bed_id, "spot_1")} />
           <TextField id="outlined-basic" label="Guest #1" variant="outlined" value={guests && guests[bed_id] && guests[bed_id]["spot_2"] ? guests[bed_id]["spot_2"] : ""} onChange={prepGuests(bed_id, "spot_2")} />
-          </Typography>
         </AccordionDetails>
       </Accordion>
     </div>

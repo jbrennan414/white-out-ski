@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './Calendar.css';
 import { Link } from "react-router-dom";
-import axios from 'axios';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { getMonthFromInteger, isPastDate } from './utils';
@@ -18,18 +17,6 @@ export default function Calendar(props) {
   const [selectedYear, setYear] = useState(year);
   const [isLoading, setIsLoading] = useState(false);
   const [availableBeds, setAvailableBeds] = useState({});
-
-  // useEffect(() => {
-
-  //   axios.get(`https://hil0sv4jl3.execute-api.us-west-2.amazonaws.com/prod?month=${selectedMonth}&year=${selectedYear}`)
-  //     .then((response) => {
-  //       setAvailableBeds(response.data);
-  //       setIsLoading(false);
-  //   }).catch((error) => {
-  //     console.log("ERRRRRRROR" , error);
-  //   });
-  // }, [selectedMonth, selectedYear]);
-
 
   const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);
   const startingDay = getStartingDay(selectedMonth, selectedYear);
@@ -130,14 +117,14 @@ export default function Calendar(props) {
     <div className="calendar">
       <div className="month-nav">
         <NavigateBeforeIcon onClick={() => {
-          setIsLoading(true)
+          setIsLoading(false)
           updateMonth(parseInt(selectedMonth - 1))
         }}/>
 
         <h2>{readableMonth}</h2>
 
         <NavigateNextIcon onClick={() => {
-          setIsLoading(true)
+          setIsLoading(false)
           updateMonth(parseInt(selectedMonth + 1))
         }}/>
       </div>
