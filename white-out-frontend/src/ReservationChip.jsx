@@ -66,18 +66,25 @@ export default function ReservationChip(props) {
     const new_guests = guests;
 
     props.setGuests({
-        ...new_guests,
-        [bed_id]: {
-          ...new_guests[bed_id],
+      ...new_guests,
+      [bed_id]: {
+        ...new_guests[bed_id],
           [spot_id]: bed_user
-        }
-      });
+      }
+    });
+  }
 
+  const checkGuests = (bed_id) => {
+    if (guests && guests[bed_id]) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   return (
     <div key={bed_id}>
-      <Accordion expanded={expanded === bed_id} onChange={handleChange(bed_id)}>
+      <Accordion expanded={expanded === bed_id || checkGuests(bed_id)} onChange={handleChange(bed_id)}>
         <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
           <Typography>{bed_name}</Typography>
         </AccordionSummary>
