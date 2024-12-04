@@ -137,11 +137,6 @@ export const beds = [
         bed_description: "This is double bed 3",
     },
     {
-        bed_id: "double_4",
-        bed_name: "Double Bed 4",
-        bed_description: "This is double bed 4",
-    },
-    {
         bed_id: "bunk_1",
         bed_name: "Bunk Bed 1",
         bed_description: "This is bunk bed 1",
